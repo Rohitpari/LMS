@@ -17,7 +17,11 @@ await connectDB();
 app.use(cors())
 
 //Routes
-app.post('/clerk',express.json(),clerkwebhooks)
+app.post(
+  '/clerk',
+  express.raw({ type: 'application/json' }),
+  clerkwebhooks
+);
 app.get('/',(req,res)=> res.send("API Working"))
 
 // Port 
