@@ -1,0 +1,28 @@
+import express from 'express'
+import cors from 'cors'
+import 'dotenv/config'
+import connectDB from './config/mongodb.js';
+import { Webhook } from 'svix';
+import clerkwebhooks from './controllers/clerkwebhooks.js'
+
+// inttialize express
+
+const app = express();
+
+// cponnect to database
+await connectDB();
+
+//  middlewares
+
+app.use(cors())
+
+//Routes
+app.post('/clerk',EventsApiResponseProcessor.json(),clerkwebhooks)
+app.get('/',(req,res)=> res.send("API Working"))
+
+// Port 
+const PORT = process.env.PORT || 5000
+
+app.listen(PORT,()=>{
+    console.log(`Server is running on port ${PORT}`)
+}) 
