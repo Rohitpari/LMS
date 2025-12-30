@@ -3,7 +3,7 @@ import cors from 'cors'
 import 'dotenv/config'
 import connectDB from './config/mongodb.js';
 import { Webhook } from 'svix';
-import clerkwebhooks from './controllers/clerkwebhooks.js'
+import webhooks from './controllers/webhooks.js'
 
 // inttialize express
 
@@ -17,12 +17,13 @@ await connectDB();
 app.use(cors())
 
 //Routes
+
+app.get('/',(req,res)=> res.send("API Working"))
 app.post(
   '/clerk',
   express.raw({ type: 'application/json' }),
-  clerkwebhooks
+  webhooks
 );
-app.get('/',(req,res)=> res.send("API Working"))
 
 // Port 
 const PORT = process.env.PORT || 5000
