@@ -25,7 +25,7 @@ export const clerkWebhooks = async (req, res) => {
         res.json({});
         break;  
       }
-      
+        
       case 'user-updated' : {
         const userData = {
           email: data.email_addresses[0].email_address || "",
