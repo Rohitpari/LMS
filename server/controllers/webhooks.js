@@ -11,47 +11,29 @@ export const clerkWebhooks = async (req, res) => {
       "svix-signature": req.headers["svix-signature"],
     });
 
-    const { data, type } = req.body
+    const payload = JSON.parse(req.body.toString());
+    const { data, type } = payload;
 
-    switch (type) {
-      case 'user.created':{
-        const userData = {
+    if (type === "user.created" || type === "user.updated") {
+      await User.findByIdAndUpdate(
+        data.id,
+        {
           _id: data.id,
-          email: data.email_addresses[0].email_address || "",
+          email: data.email_addresses?.[0]?.email_address || "",
           name: `${data.first_name} ${data.last_name}`,
           imageUrl: data.image_url,
-        }      
-        await User.create(userData)
-        res.json({});
-        break;  
-      }
-
-      case 'user-updated' : {
-        const userData = {
-          email: data.email_addresses[0].email_address || "",
-          name: `${data.first_name} ${data.last_name}`,
-          imageUrl: data.image_url,
-        }      
-        await User.findByIdAndUpdate(data.id,userData)
-        res.json({});
-        break;
-      } 
-
-      case 'user-deleted':{
-        await User.findByIdAndDelete(data.id)
-        res.json({})
-        break;
-      }
-    
-      default:
-        break;
+        },
+        { upsert: true, new: true }
+      );
     }
 
+    if (type === "user.deleted") {
+      await User.findByIdAndDelete(data.id);
+    }
 
+    return res.json({ success: true });
   } catch (error) {
     console.error("Webhook error:", error.message);
     return res.status(400).json({ success: false });
   }
 };
-
-
