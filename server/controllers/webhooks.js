@@ -1,5 +1,5 @@
 import { Webhook } from "svix";
-import {User} from "../models/User.js";
+import User from "../models/User.js";
 
 export const clerkWebhooks = async (req, res) => {
   try {
@@ -25,7 +25,7 @@ export const clerkWebhooks = async (req, res) => {
         res.json({});
         break;  
       }
-        
+
       case 'user-updated' : {
         const userData = {
           email: data.email_addresses[0].email_address || "",
