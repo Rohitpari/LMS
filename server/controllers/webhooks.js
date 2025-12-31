@@ -46,9 +46,9 @@ export const stripeWebhooks  = async(req,res)=>{
   const sig = req.headers['stripe-signature'];
   let event;
   try {
-    event = Stripe.webhooks.constructEvent(req.body,sig,process.env.STRIPE_WEBHOOK_SECRET)
+    event = stripeInstance.webhooks.constructEvent(req.body,sig,process.env.STRIPE_WEBHOOK_SECRET)
   } catch (error) {
-    res.status(400).send(`Webhook error : ${error.message}`)
+    res.status(400).send(`Webhook error : ${ error.message}`)
   }
 
    switch (event.type) {
@@ -56,7 +56,7 @@ export const stripeWebhooks  = async(req,res)=>{
       const paymentIntent = event.data.object;
       const paymentIntentId = paymentIntent.id;
 
-      const session = await stripeInstance.checkout.session.list({
+      const session = await stripeInstance.checkout.sessions.list({
         payment_intent : paymentIntentId
       })
       const {purchaseId} = session.data[0].metadata;
@@ -76,7 +76,7 @@ export const stripeWebhooks  = async(req,res)=>{
       const paymentIntent = event.data.object;
       const paymentIntentId = paymentIntent.id;
 
-      const session = await stripeInstance.checkout.session.list({
+      const session = await stripeInstance.checkout.sessions.list({
         payment_intent : paymentIntentId
       })
       const {purchaseId} = session.data[0].metadata;
@@ -91,7 +91,7 @@ export const stripeWebhooks  = async(req,res)=>{
   }
 
   // Return a response to acknowledge receipt of the event
-  response.json({received: true});
+  res.json({received: true});
 }
 
 
