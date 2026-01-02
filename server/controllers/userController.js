@@ -40,7 +40,8 @@ export const purchaseCourse = async(req,res)=>{
     try {
         const {courseId} = req.body
         const {origin} = req.headers
-        const userId = req.auth.userId
+        const {userId} = req.auth()
+        // const userId = req.auth.userId
         const userData = await User.findById(userId)
         const courseData = await Course.findById(courseId)
 
@@ -73,7 +74,7 @@ export const purchaseCourse = async(req,res)=>{
             quantity :1
         }]
         const session =await stripeInstance.checkout.sessions.create({
-            success_url :`${origin}/loading/my-enrollments`,
+            success_url :`${origin}/my-enrollments`,
             cancel_url : `${origin}/`,
             line_items : line_items,
             mode : "payment",
