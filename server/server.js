@@ -19,13 +19,15 @@ await connectDB();
 await connectCloudinary();
 
 //  middlewares 
-app.post('/clerk',express.raw({ type: "application/json" }), clerkWebhooks);
-
+app.use(cors())
 app.post('/stripe',express.raw({type:'application/json'}),stripeWebhooks)
 
+app.post('/clerk',express.raw({ type: "application/json" }), clerkWebhooks);
 
-app.use(cors())
+
+
 app.use(clerkMiddleware())
+app.use(express.json())
 
 //Routes
 app.get('/',(req,res)=> res.send("API Working"))
@@ -41,3 +43,4 @@ const PORT = process.env.PORT || 5000
 app.listen(PORT,()=>{
     console.log(`Server is running on port ${PORT}`)
 }) 
+
