@@ -1,19 +1,43 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { AppContext } from '../../context/AppContext'
 import Loading from '../../components/students/Loading';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 function MyCourses() {
-  const {currency,allCourses} = useContext(AppContext);
+  const {currency,allCourses,backendURL,isEducator,getToken} = useContext(AppContext);
 
   const [courses,setCourses] = useState([]);
+  console.log(allCourses);
+  
 
-  const fetchEducatorCourses = async()=>{
+  const fetchEducatorCourses = async () => {
     setCourses(allCourses);
-  }
+  // try {
+  //   const token = await getToken();
+
+  //   const { data } = await axios.get(
+  //     backendURL + '/api/educator/courses',
+  //     {
+  //       headers: { Authorization: `Bearer ${token}` }
+  //     }
+  //   );
+
+  //   if (data.success) {
+  //     setCourses(data.courses);
+  //   } else {
+  //     toast.error(data.message);
+  //   }
+  // } catch (error) {
+  //   toast.error("Unauthorized Access");
+  // }
+};
 
   useEffect(()=>{
-    fetchEducatorCourses();
-  },[allCourses])
+    if(isEducator){
+      fetchEducatorCourses();
+    }
+  },[isEducator,allCourses])
 
 
   

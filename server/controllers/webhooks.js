@@ -109,7 +109,7 @@ export const stripeWebhooks = async (req, res) => {
             
             if (sessions.data.length > 0) {
                 const { purchaseId } = sessions.data[0].metadata;
-                await Purchase.findByIdAndUpdate(purchaseId, { status: "completed" });
+                await Purchase.findByIdAndUpdate(purchaseId, { status : "completed" });
             }
             break;
         }

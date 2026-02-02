@@ -21,6 +21,11 @@ export const getAllCourse = async(req,res)=>{
 export const getCourseId = async(req,res)=>{
     const {id} = req.params
 
+    if (!id) {
+      return res.json({ success: false, message: "Course ID missing" });
+    }
+    // console.log("id" , id);
+
     try {
         const courseData = await Course.findById(id).populate({path:'educator'})
         // remove lectureUrl if isPreviewFree  is false
@@ -38,4 +43,6 @@ export const getCourseId = async(req,res)=>{
      res.json({success : false,message : error.message})   
     }
 }
+
+
  

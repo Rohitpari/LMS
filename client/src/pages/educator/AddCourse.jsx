@@ -1,10 +1,17 @@
-import React, { useEffect, useRef, useState } from 'react'
-import uniqid from 'uniqid'
+import React, { useContext, useEffect, useRef, useState } from 'react'
+// import uniqid from 'uniqid'
+import{ v4 as uuidv4} from 'uuid'
 import Quill from 'quill'
 import { assets } from '../../assets/assets'
+import { AppContext } from '../../context/AppContext';
+import { Form } from 'react-router-dom';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 
 function AddCourse() {
+
+  const {backendURL, getToken} = useContext(AppContext);
 
   const quillRef = useRef(null)
   const editorRef = useRef(null)
@@ -31,7 +38,7 @@ function AddCourse() {
       const title = prompt('Enter chapter Name : ')
       if (title) {
         const newChapter = {
-          chapterId: uniqid(),
+          chapterId: uuidv4(),
           chapterTitle: title,
           chapterContent: [],
           collapsed: false,
@@ -107,7 +114,7 @@ function AddCourse() {
                   chapter.chapterContent.length > 0
                     ? chapter.chapterContent.slice(-1)[0].lectureOrder + 1
                     : 1,
-                lectureId: uniqid(),
+                lectureId: uuidv4(),
               },
             ],
           }
@@ -128,7 +135,43 @@ function AddCourse() {
 
    
   const handleSubmit = async (e) =>{
-    e.preventDefault();
+    try {
+      e.preventDefault();
+      if(!image){
+        toast.error("Thumbnail not selected");
+      } 
+      const courseData = {
+        courseTitle,
+        courseDescription: quillRef.current.root.innerHTML,
+        coursePrice : Number(coursePrice),
+        discount : Number(discount),
+        courseContent : chapters,
+      }
+      const formData = new FormData();
+      formData.append('courseData', JSON.stringify(courseData));
+      formData.append('image', image);
+
+      const token = await getToken();
+
+      const {data} = await axios.post(`${backendURL}/api/educator/add-course`, formData,
+      { headers: { Authorization: `Bearer ${token}` } });
+
+      if(data.success){
+        toast.success(data.message);  
+        //reset form
+        setCourseTitle('');
+        quillRef.current.root.innerHTML = '';
+        setCoursePrice(0);
+        setDiscount(0);
+        setImage(null);
+        setChapters([]);
+      }else{
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+    // e.preventDefault();
   }
 
   useEffect(() => {
