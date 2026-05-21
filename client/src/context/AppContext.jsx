@@ -17,7 +17,7 @@ export const AppContextProvider = (props) => {
     const backendURL = import.meta.env.VITE_BACKEND_URL;
 
     const [allCourses, setAllCourses] = useState([]);
-    const [isEducator, setIsEducator] = useState(true);
+    const [isEducator, setIsEducator] = useState(false);
     const [enrolledCourses, setEnrolledCourses] = useState([]);
     const [userData, setUserData] = useState(null);
     //fetch courses
