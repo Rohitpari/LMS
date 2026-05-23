@@ -107,6 +107,9 @@ export const educatorDashboardData = async (req, res) => {
   }
 };
 
+
+
+
 // Get Enrolled Student Data whith purhase data
 
 export const getEnrolledStudentsData = async (req, res) => {

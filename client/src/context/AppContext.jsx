@@ -17,7 +17,7 @@ export const AppContextProvider = (props) => {
     const backendURL = import.meta.env.VITE_BACKEND_URL;
 
     const [allCourses, setAllCourses] = useState([]);
-    const [isEducator, setIsEducator] = useState(false);
+    const [isEducator, setIsEducator] = useState(true);
     const [enrolledCourses, setEnrolledCourses] = useState([]);
     const [userData, setUserData] = useState(null);
     //fetch courses
@@ -46,6 +46,9 @@ export const AppContextProvider = (props) => {
     const fetchUserData = async () => {
         if (user.publicMetadata.role === 'educator') {
             setIsEducator(true);
+        }
+        else{
+            setIsEducator(false);
         }
         try {
             const token = await getToken();
